@@ -5,7 +5,7 @@
 
 const { ApifyClient } = require('apify-client');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
-const db = require('./db');
+const db = require('../db');
 
 const NICHES = [
   'solar', 'roofing', 'hvac', 'pools', 'driveways',

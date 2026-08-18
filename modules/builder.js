@@ -5,7 +5,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const db = require('./db');
+const db = require('../db');
 
 const TEMPLATES_DIR = path.join(__dirname, '..', 'templates');
 const OUTPUT_DIR = path.join(__dirname, '..', 'output');

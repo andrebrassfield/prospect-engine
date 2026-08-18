@@ -8,7 +8,7 @@ const crypto = require('crypto');
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
-const db = require('./db');
+const db = require('../db');
 
 const router = express.Router();
 

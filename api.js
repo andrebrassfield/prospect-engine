@@ -11,6 +11,8 @@ const { buildSite } = require('./modules/builder');
 const { fillForm, makePostcard } = require('./modules/outreach');
 const { processQueue } = require('./modules/edit-agent');
 const { findReviewProspects, sendReviewRequest } = require('./modules/reviews');
+const { researchCompetitor, getBrief } = require('./modules/intel');
+const { addSignal, getWeeklyBrief } = require('./modules/signals');
 const paywallRouter = require('./modules/paywall');
 const db = require('./db');
 
@@ -238,6 +240,51 @@ app.post('/reviews/send', async (req, res) => {
     const { businessId, customerName, customerEmail } = req.body;
     const result = await sendReviewRequest(businessId, customerName, customerEmail);
     res.json({ success: true, ...result });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// === INTEL ===
+app.post('/intel/research', async (req, res) => {
+  try {
+    const { company, sources = [], categories } = req.body;
+    if (!company) return res.status(400).json({ error: 'company is required' });
+    const result = await researchCompetitor(company, sources, categories);
+    res.json({ success: true, ...result });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/intel/brief', (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit || '20', 10);
+    const brief = getBrief(limit);
+    res.json({ success: true, ...brief });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// === SIGNALS ===
+app.post('/signals/add', (req, res) => {
+  try {
+    const { source_type, source_ref, segment, signal_type, signal_text, direction } = req.body;
+    if (!signal_type || !signal_text) {
+      return res.status(400).json({ error: 'signal_type and signal_text are required' });
+    }
+    const id = addSignal({ source_type, source_ref, segment, signal_type, signal_text, direction });
+    res.json({ success: true, id });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/signals/weekly', (req, res) => {
+  try {
+    const brief = getWeeklyBrief();
+    res.json({ success: true, ...brief });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

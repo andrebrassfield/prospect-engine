@@ -397,6 +397,162 @@
           }
         }
       }
+    },
+    "/intel/research": {
+      "post": {
+        "summary": "Run competitor research for a company",
+        "operationId": "researchCompetitor",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["company"],
+                "properties": {
+                  "company": { "type": "string" },
+                  "sources": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  },
+                  "categories": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Competitor research complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "company": { "type": "string" },
+                    "findings": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "company": { "type": "string" },
+                          "product": { "type": "string" },
+                          "category": { "type": "string" },
+                          "claim": { "type": "string" },
+                          "status": { "type": "string" },
+                          "previous": { "type": "string" },
+                          "source": { "type": "string" },
+                          "decision_owner": { "type": "string" },
+                          "suggested_response": { "type": "string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/intel/brief": {
+      "get": {
+        "summary": "Get material competitor changes brief",
+        "operationId": "getIntelBrief",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": { "type": "integer", "default": 20 }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Intel brief",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "material": { "type": "array" },
+                    "history": { "type": "array" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/signals/add": {
+      "post": {
+        "summary": "Add a customer signal",
+        "operationId": "addCustomerSignal",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["signal_type", "signal_text"],
+                "properties": {
+                  "source_type": { "type": "string" },
+                  "source_ref": { "type": "string" },
+                  "segment": { "type": "string" },
+                  "signal_type": { "type": "string" },
+                  "signal_text": { "type": "string" },
+                  "direction": { "type": "string", "enum": ["new", "growing", "fading"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Signal added",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "id": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/signals/weekly": {
+      "get": {
+        "summary": "Get weekly customer signal brief",
+        "operationId": "getWeeklySignals",
+        "responses": {
+          "200": {
+            "description": "Weekly signals brief",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "newSignals": { "type": "array" },
+                    "growing": { "type": "array" },
+                    "fading": { "type": "array" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

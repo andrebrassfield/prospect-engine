@@ -90,6 +90,42 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_businesses_niche_area ON businesses(niche, area);
   CREATE INDEX IF NOT EXISTS idx_businesses_status ON businesses(status);
   CREATE INDEX IF NOT EXISTS idx_businesses_score ON businesses(score DESC);
+
+  CREATE TABLE IF NOT EXISTS competitor_facts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    company TEXT NOT NULL,
+    product TEXT,
+    category TEXT NOT NULL,
+    claim TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'new',
+    source TEXT NOT NULL,
+    source_url TEXT,
+    checked_at TEXT NOT NULL DEFAULT (datetime('now')),
+    previous_id INTEGER,
+    decision_owner TEXT,
+    suggested_response TEXT,
+    FOREIGN KEY (previous_id) REFERENCES competitor_facts(id)
+  );
+  CREATE INDEX IF NOT EXISTS idx_competitor_facts_company ON competitor_facts(company);
+  CREATE INDEX IF NOT EXISTS idx_competitor_facts_status ON competitor_facts(status);
+  CREATE INDEX IF NOT EXISTS idx_competitor_facts_category ON competitor_facts(category);
+
+  CREATE TABLE IF NOT EXISTS customer_signals (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    source_type TEXT NOT NULL,
+    source_ref TEXT,
+    segment TEXT,
+    signal_type TEXT NOT NULL,
+    signal_text TEXT NOT NULL,
+    direction TEXT NOT NULL DEFAULT 'new',
+    evidence_count INTEGER DEFAULT 1,
+    reviewed INTEGER DEFAULT 0,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+  CREATE INDEX IF NOT EXISTS idx_customer_signals_segment ON customer_signals(segment);
+  CREATE INDEX IF NOT EXISTS idx_customer_signals_type ON customer_signals(signal_type);
+  CREATE INDEX IF NOT EXISTS idx_customer_signals_direction ON customer_signals(direction);
 `);
 
 module.exports = db;
