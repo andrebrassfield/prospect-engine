@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{BUSINESS_NAME}} - Pool Services</title>
+  <!-- Tailwind CDN: acceptable for rapid static site generation -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .paywall-bar { 
+      background: linear-gradient(90deg, #0369a1 0%, #0ea5e9 100%);
+      backdrop-filter: blur(10px);
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Paywall Bar -->
+  <div id="paywall" class="paywall-bar text-white py-3 px-4 text-center sticky top-0 z-50">
+    <p class="text-sm">This site is ready to go live. 
+      <a href="{{CHECKOUT_URL}}" class="underline font-bold hover:text-blue-200">Subscribe now</a> 
+      to activate your professional website.
+    </p>
+  </div>
+
+  <!-- Hero -->
+  <header class="bg-gradient-to-br from-blue-800 to-cyan-600 text-white py-20 px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">{{BUSINESS_NAME}}</h1>
+      <p class="text-xl md:text-2xl text-blue-100 mb-8">{{TAGLINE}}</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="tel:{{PHONE}}" class="bg-white text-blue-800 px-8 py-3 rounded-lg font-bold text-lg hover:bg-blue-50 transition">
+          Call {{PHONE}}
+        </a>
+        <a href="#quote" class="bg-cyan-600 text-white px-8 py-3 rounded-lg font-bold text-lg hover:bg-cyan-500 transition border-2 border-white">
+          Get Free Quote
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Services -->
+  <section class="py-16 px-4">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Our Services</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        {{#SERVICES}}
+        <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-cyan-600">
+          <h3 class="text-xl font-bold text-gray-900 mb-2">{{name}}</h3>
+          <p class="text-gray-600">{{description}}</p>
+          {{#price}}<p class="text-cyan-600 font-semibold mt-2">From {{price}}</p>{{/price}}
+        </div>
+        {{/SERVICES}}
+      </div>
+    </div>
+  </section>
+
+  <!-- Service Area -->
+  <section class="py-16 px-4 bg-cyan-50">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">Service Area</h2>
+      <p class="text-gray-600 text-lg mb-6">Proudly serving {{SERVICE_AREA}}</p>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section class="py-16 px-4">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Our Work</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {{#GALLERY}}
+        <div class="aspect-square bg-gray-300 rounded-lg overflow-hidden">
+          <img src="{{url}}" alt="{{alt}}" class="w-full h-full object-cover">
+        </div>
+        {{/GALLERY}}
+      </div>
+    </div>
+  </section>
+
+  <!-- Quote Form -->
+  <section id="quote" class="py-16 px-4 bg-cyan-700 text-white">
+    <div class="max-w-2xl mx-auto">
+      <h2 class="text-3xl font-bold mb-8 text-center">Get Your Free Quote</h2>
+      <form class="space-y-4">
+        <input type="text" placeholder="Your Name" required
+          class="w-full px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500">
+        <input type="tel" placeholder="Phone Number" required
+          class="w-full px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500">
+        <input type="email" placeholder="Email Address" required
+          class="w-full px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500">
+        <input type="text" placeholder="Your Address" required
+          class="w-full px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500">
+        <select class="w-full px-4 py-3 rounded-lg text-gray-900">
+          <option>Service Needed</option>
+          <option>New Pool Installation</option>
+          <option>Pool Renovation</option>
+          <option>Pool Maintenance</option>
+          <option>Pool Repair</option>
+          <option>Equipment Installation</option>
+        </select>
+        <textarea placeholder="Describe your pool project" rows="3"
+          class="w-full px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500"></textarea>
+        <button type="submit" class="w-full bg-white text-cyan-700 px-8 py-4 rounded-lg font-bold text-lg hover:bg-cyan-50 transition">
+          Request Free Quote
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-400 py-8 px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <p class="text-lg text-white font-semibold">{{BUSINESS_NAME}}</p>
+      <p class="mt-2">{{ADDRESS}}</p>
+      <p>{{PHONE}}</p>
+      <p class="mt-4 text-sm">© {{YEAR}} {{BUSINESS_NAME}}. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    if (window.location.search.includes('paid=true')) {
+      document.getElementById('paywall').style.display = 'none';
+    }
+  </script>
+</body>
+</html>

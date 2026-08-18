@@ -1,0 +1,410 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Prospect Engine API",
+    "description": "Automated sales machine for web services — find, score, build, outreach, convert.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://your-railway-url.railway.app",
+      "description": "Production"
+    }
+  ],
+  "security": [
+    { "BearerAuth": [] }
+  ],
+  "paths": {
+    "/find": {
+      "post": {
+        "summary": "Find businesses by niche and area",
+        "operationId": "findBusinesses",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["niche", "area"],
+                "properties": {
+                  "niche": {
+                    "type": "string",
+                    "enum": ["solar", "roofing", "hvac", "pools", "driveways", "extensions", "landscaping", "windows", "flooring", "garage-doors", "fencing", "tree-surgery"]
+                  },
+                  "area": {
+                    "type": "string",
+                    "description": "City and state, e.g. 'Little Rock, AR'"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Businesses found and inserted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "total": { "type": "integer" },
+                    "added": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/score": {
+      "post": {
+        "summary": "Score unscored businesses using Gemini Flash",
+        "operationId": "scoreBusinesses",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": { "type": "integer", "default": 50 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Scoring complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "scored": { "type": "integer" },
+                    "filtered": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/build": {
+      "post": {
+        "summary": "Build sites for businesses above score threshold",
+        "operationId": "buildSites",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "threshold": { "type": "integer", "default": 7, "description": "Minimum score to build" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sites built",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "built": { "type": "integer" },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "integer" },
+                          "name": { "type": "string" },
+                          "path": { "type": "string" },
+                          "success": { "type": "boolean" },
+                          "error": { "type": "string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/outreach": {
+      "post": {
+        "summary": "Run outreach (contact forms or postcards)",
+        "operationId": "runOutreach",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "businessIds": {
+                    "type": "array",
+                    "items": { "type": "integer" },
+                    "description": "Specific businesses, or omit for all high-score pending"
+                  },
+                  "limit": { "type": "integer", "default": 10 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Outreach completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "integer" },
+                          "name": { "type": "string" },
+                          "channel": { "type": "string", "enum": ["form", "postcard"] },
+                          "sent": { "type": "boolean" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/send": {
+      "post": {
+        "summary": "Send queued postcards via Lob/PostGrid",
+        "operationId": "sendPostcards",
+        "responses": {
+          "200": {
+            "description": "Postcards sent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "pending": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pending": {
+      "get": {
+        "summary": "Get items waiting for approval",
+        "operationId": "getPending",
+        "responses": {
+          "200": {
+            "description": "Pending items",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "outreach": { "type": "array" },
+                    "sites": { "type": "array" },
+                    "changes": { "type": "array" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/approve": {
+      "post": {
+        "summary": "Approve items for sending/deployment",
+        "operationId": "approveItems",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["ids", "type"],
+                "properties": {
+                  "ids": { "type": "array", "items": { "type": "integer" } },
+                  "type": { "type": "string", "enum": ["outreach", "sites"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Items approved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "approved": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/status": {
+      "get": {
+        "summary": "System status and counts",
+        "operationId": "getStatus",
+        "responses": {
+          "200": {
+            "description": "System status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total_businesses": { "type": "integer" },
+                    "by_status": { "type": "array" },
+                    "by_niche": { "type": "array" },
+                    "sites_built": { "type": "integer" },
+                    "sites_live": { "type": "integer" },
+                    "outreach_sent": { "type": "integer" },
+                    "reviews_sent": { "type": "integer" },
+                    "pending_changes": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/find": {
+      "post": {
+        "summary": "Find businesses needing review campaigns",
+        "operationId": "findReviewProspects",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["niche", "area"],
+                "properties": {
+                  "niche": { "type": "string" },
+                  "area": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Review prospects found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "prospects": { "type": "array" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/send": {
+      "post": {
+        "summary": "Send review request to a customer",
+        "operationId": "sendReviewRequest",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["businessId", "customerName", "customerEmail"],
+                "properties": {
+                  "businessId": { "type": "integer" },
+                  "customerName": { "type": "string" },
+                  "customerEmail": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Review request sent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "sent": { "type": "boolean" },
+                    "reviewLink": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/paywall/webhook/whop": {
+      "post": {
+        "summary": "Whop payment webhook",
+        "operationId": "whopWebhook",
+        "responses": {
+          "200": {
+            "description": "Webhook received",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "received": { "type": "boolean" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

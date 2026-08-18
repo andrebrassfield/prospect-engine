@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{BUSINESS_NAME}} - Solar Installation</title>
+  <!-- Tailwind CDN: acceptable for rapid static site generation -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .paywall-bar { 
+      background: linear-gradient(90deg, #1e3a5f 0%, #2d5a87 100%);
+      backdrop-filter: blur(10px);
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Paywall Bar -->
+  <div id="paywall" class="paywall-bar text-white py-3 px-4 text-center sticky top-0 z-50">
+    <p class="text-sm">This site is ready to go live. 
+      <a href="{{CHECKOUT_URL}}" class="underline font-bold hover:text-blue-200">Subscribe now</a> 
+      to activate your professional website.
+    </p>
+  </div>
+
+  <!-- Hero -->
+  <header class="bg-gradient-to-br from-blue-900 to-blue-700 text-white py-20 px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">{{BUSINESS_NAME}}</h1>
+      <p class="text-xl md:text-2xl text-blue-100 mb-8">{{TAGLINE}}</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="tel:{{PHONE}}" class="bg-white text-blue-900 px-8 py-3 rounded-lg font-bold text-lg hover:bg-blue-50 transition">
+          Call {{PHONE}}
+        </a>
+        <a href="#quote" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-bold text-lg hover:bg-blue-500 transition border-2 border-white">
+          Get Free Quote
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Savings Calculator -->
+  <section class="py-16 px-4 bg-green-50">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl font-bold text-gray-900 mb-8">Start Saving Today</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <div class="text-4xl font-bold text-green-600 mb-2">{{AVG_SAVINGS}}</div>
+          <p class="text-gray-600">Average Annual Savings</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <div class="text-4xl font-bold text-green-600 mb-2">{{PAYBACK_YEARS}}</div>
+          <p class="text-gray-600">Year Payback Period</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <div class="text-4xl font-bold text-green-600 mb-2">{{ROI_PERCENT}}</div>
+          <p class="text-gray-600">Return on Investment</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="py-16 px-4">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Our Services</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        {{#SERVICES}}
+        <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-blue-600">
+          <h3 class="text-xl font-bold text-gray-900 mb-2">{{name}}</h3>
+          <p class="text-gray-600">{{description}}</p>
+          {{#price}}<p class="text-blue-600 font-semibold mt-2">From {{price}}</p>{{/price}}
+        </div>
+        {{/SERVICES}}
+      </div>
+    </div>
+  </section>
+
+  <!-- Finance Options -->
+  <section class="py-16 px-4 bg-blue-900 text-white">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl font-bold mb-8">Flexible Finance Options</h2>
+      <div class="grid md:grid-cols-3 gap-6">
+        {{#FINANCE_OPTIONS}}
+        <div class="bg-blue-800 p-6 rounded-xl">
+          <h3 class="text-xl font-bold mb-2">{{name}}</h3>
+          <p class="text-blue-100">{{description}}</p>
+          {{#rate}}<p class="text-2xl font-bold mt-2">{{rate}}</p>{{/rate}}
+        </div>
+        {{/FINANCE_OPTIONS}}
+      </div>
+    </div>
+  </section>
+
+  <!-- Service Area -->
+  <section class="py-16 px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">Service Area</h2>
+      <p class="text-gray-600 text-lg mb-6">Proudly serving {{SERVICE_AREA}}</p>
+      <div class="bg-gray-200 rounded-xl h-64 flex items-center justify-center">
+        <span class="text-gray-500">Map placeholder</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section class="py-16 px-4 bg-gray-100">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Our Work</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {{#GALLERY}}
+        <div class="aspect-square bg-gray-300 rounded-lg overflow-hidden">
+          <img src="{{url}}" alt="{{alt}}" class="w-full h-full object-cover">
+        </div>
+        {{/GALLERY}}
+      </div>
+    </div>
+  </section>
+
+  <!-- Quote Form -->
+  <section id="quote" class="py-16 px-4 bg-blue-600 text-white">
+    <div class="max-w-2xl mx-auto">
+      <h2 class="text-3xl font-bold mb-8 text-center">Get Your Free Quote</h2>
+      <form class="space-y-4">
+        <input type="text" placeholder="Your Name" required
+          class="w-full px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500">
+        <input type="tel" placeholder="Phone Number" required
+          class="w-full px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500">
+        <input type="email" placeholder="Email Address" required
+          class="w-full px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500">
+        <input type="text" placeholder="Your Address" required
+          class="w-full px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500">
+        <select class="w-full px-4 py-3 rounded-lg text-gray-900">
+          <option>System Size (kW)</option>
+          <option>Small (3-5 kW)</option>
+          <option>Medium (6-10 kW)</option>
+          <option>Large (11-15 kW)</option>
+          <option>Commercial (15+ kW)</option>
+        </select>
+        <textarea placeholder="Tell us about your property" rows="3"
+          class="w-full px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500"></textarea>
+        <button type="submit" class="w-full bg-white text-blue-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-blue-50 transition">
+          Request Free Quote
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-400 py-8 px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <p class="text-lg text-white font-semibold">{{BUSINESS_NAME}}</p>
+      <p class="mt-2">{{ADDRESS}}</p>
+      <p>{{PHONE}}</p>
+      <p class="mt-4 text-sm">© {{YEAR}} {{BUSINESS_NAME}}. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Hide paywall if paid
+    if (window.location.search.includes('paid=true')) {
+      document.getElementById('paywall').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
